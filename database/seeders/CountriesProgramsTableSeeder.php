@@ -235,5 +235,9 @@ class CountriesProgramsTableSeeder extends Seeder
             'programs_id' => 50,
             'countries_id' => 9
         ]);
+        DB::table('countries_programs')->insert([
+            'programs_id' => 7,
+            'countries_id' => 202
+        ]);
     }
 }

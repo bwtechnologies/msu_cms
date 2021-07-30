@@ -188,6 +188,19 @@ class MediaTableSeeder extends Seeder
             'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-and-culture-in-st-petersburg-2__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
             'gallery_id' => 5
         ]);
+        //Russia (European)
+        DB::table('media')->insert([
+            'type'       => 1,
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-and-culture-in-st-petersburg.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-and-culture-in-st-petersburg__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'gallery_id' => 31
+        ]);
+        DB::table('media')->insert([
+            'type'       => 1,
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-and-culture-in-st-petersburg-2.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-and-culture-in-st-petersburg-2__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'gallery_id' => 31
+        ]);
         //UK
         DB::table('media')->insert([
             'type'       => 1,
@@ -687,33 +700,28 @@ class MediaTableSeeder extends Seeder
             'gallery_id' => 16
         ]);
         //Malaysia
-        /* Client decided against using these Stock images
         DB::table('media')->insert([
             'type'       => 1,
-            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "kuala_lumpur_gebaude__jegathisan-manoharan.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
-            'gallery_id' => 30,
-            'credit'     => 'Jegathisan Manoharan'
-        ]);
-        DB::table('media')->insert([
-            'type'       => 1,
-            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "kuala_lumpur__zukiman_mohamad.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
-            'gallery_id' => 30,
-            'credit'     => 'Zukimazn Mohamed'
-        ]);
-        DB::table('media')->insert([
-            'type'       => 1,
-            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "kuala_lumpur__6636.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9310.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9310__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
             'gallery_id' => 30
         ]);
         DB::table('media')->insert([
             'type'       => 1,
-            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "kuala_lumpur__6616.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9311.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9311__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
             'gallery_id' => 30
-        ]);*/
+        ]);
         DB::table('media')->insert([
             'type'       => 1,
-            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "malaysia__img_9310.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
-            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "malaysia__img_9310__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9312.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9312__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'gallery_id' => 30
+        ]);
+        DB::table('media')->insert([
+            'type'       => 1,
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9313.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business_studies_at_monash_university_malaysia--9313__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
             'gallery_id' => 30
         ]);
     }

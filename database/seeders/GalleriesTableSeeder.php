@@ -134,5 +134,9 @@ class GalleriesTableSeeder extends Seeder
         DB::table('galleries')->insert([
             'countries_id' => 107
         ]);
+        //31 Russia (European)
+        DB::table('galleries')->insert([
+            'countries_id' => 202
+        ]);
     }
 }

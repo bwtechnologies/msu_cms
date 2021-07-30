@@ -389,6 +389,11 @@ class Screen extends Component {
     this.getPrograms()
     this.getCountries()
     this.getContinents()
+
+    Echo.channel(`screens`)
+    .listen('ScreenAdded', (e) => {
+      console.log('screen!!!',e)
+    })
   }
 
   render(){

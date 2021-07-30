@@ -2,6 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\ContinentsUpdated;
+use App\Events\CountriesUpdated;
+use App\Events\ScreenAdded;
+
+use App\Listeners\GetUpdatedContinents;
+use App\Listeners\GetUpdatedCountries;
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +25,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ContinentsUpdated::class => [
+            GetUpdatedContinents::class,
+        ],
+        CountriesUpdated::class => [
+            GetUpdatedCountries::class,
+        ]
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Models\Continent;
+use App\Events\ContinentsUpdated;
 
 use Illuminate\Http\Request;
 
@@ -14,8 +15,10 @@ class ContinentsController extends Controller
     public function parse($continents)
     {
         foreach ($continents as $continent) {
+            ContinentsUpdated::dispatch($continent);
             $continent->countries;
         }
+
         return $continents;
     }
 

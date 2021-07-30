@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\Models\Countries;
-
+use App\Events\CountriesUpdated;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Http\Request;
 
 class CountriesController extends Controller
@@ -18,6 +19,8 @@ class CountriesController extends Controller
             $country->programs;
             $country->gallery;
             if($country->gallery) $country->gallery->media;
+
+            CountriesUpdated::dispatch($country);
         }
 
         return $countries;

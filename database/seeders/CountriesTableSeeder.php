@@ -85,6 +85,7 @@ class CountriesTableSeeder extends Seeder
             'code' => '',
             'color' => rand(4,10), 
             'enabled' => 'on', 
+            'suspended' => 'on', 
             'continent_id' => 5
         ]);//10
         DB::table('countries')->insert([
@@ -475,6 +476,7 @@ class CountriesTableSeeder extends Seeder
             'code' => 'https://broad.msu.edu/education-abroad/programs/?term%5B%27term%27%5D=All&subject%5B%27subject%27%5D=All&program%5B%27program%27%5D=All&region%5B%27region%27%5D=All&country%5B1480%5D=1480&filterType=OR&submit=Submit',
             'color' => rand(4,10), 
             'enabled' => 'on', 
+            'suspended' => 'on', 
             'continent_id' => 5
         ]);//65
         DB::table('countries')->insert([
@@ -1450,5 +1452,13 @@ class CountriesTableSeeder extends Seeder
             'color' => rand(4,10), 
             'continent_id' => 3
         ]);//201
+        DB::table('countries')->insert([
+            'name' => 'Russian Federation',
+            'slug' => 'russia--europe', 
+            'code' => 'https://broad.msu.edu/education-abroad/programs/?term%5B%27term%27%5D=All&subject%5B%27subject%27%5D=All&program%5B%27program%27%5D=All&region%5B%27region%27%5D=All&country%5B1492%5D=1492&filterType=OR&submit=Submit',
+            'color' => rand(4,10), 
+            'enabled' => 'on', 
+            'continent_id' => 5
+        ]);//202
     }
 }

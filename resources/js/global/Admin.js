@@ -811,6 +811,11 @@ class Admin extends Component {
   }
 
   componentDidMount() {
+    Echo.channel(`screens`)
+    .listen('ScreenAdded', (e) => {
+      console.log(e)
+    })
+
     updateBodyStyle('admin')
     this.checkPage()
   }
