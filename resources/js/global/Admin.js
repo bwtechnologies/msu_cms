@@ -813,68 +813,75 @@ class Admin extends Component {
   componentDidMount() {
     Echo.channel(`screens`)
     .listen('ScreenAdded', (e) => {
-      console.log(e)
+      this.resetAlert();
+      this.setState({
+        feedback: {
+          msg: `A new follower screen called "${e.screens}" was added to the System`,
+          style: 'success'
+        }
+      })
+      this.checkPage(true)
     })
 
     updateBodyStyle('admin')
     this.checkPage()
   }
 
-  getPage(page) {
+  getPage(page=false,force=false) {
     switch(page){
       case 'galleries':
-        if(!this.galleries.length & !this.state.loading) this.getGalleries(this.getMedia)
+        if(force || (!this.galleries.length & !this.state.loading)) this.getGalleries(this.getMedia)
         updateBodyStyle('galleries')
       break;
       case 'continents':
-        if(!this.continents.length & !this.state.loading) this.getContinents()
+        if(force || (!this.continents.length & !this.state.loading)) this.getContinents()
         updateBodyStyle('continents')
       break;
       case 'programs':
-        if(!this.programs.length & !this.state.loading) this.getPrograms(this.getCountries)
+        if(force || (!this.programs.length & !this.state.loading)) this.getPrograms(this.getCountries)
         updateBodyStyle('programs')
       break;
       case 'settings':
         //if(!this.state.settings) this.getSettings() Dev Note: not devved yet. Settings are in the json for now
         updateBodyStyle('settings')
       case 'countries':
-        if(!this.continents.length & !this.state.loading) this.getContinents(this.getCountries)
+        if(force || (!this.continents.length & !this.state.loading)) this.getContinents(this.getCountries)
         updateBodyStyle('countries')
       break;
       case 'country':
         //Dev Note: we need a straight country call, but this'll work for now
-        if(!this.continents.length & !this.state.loading) this.getContinents(this.getCountries)
+        if(force || (!this.continents.length & !this.state.loading)) this.getContinents(this.getCountries)
         updateBodyStyle('country')
       break;
       default:
-        if(!this.continents.length & !this.state.loading) this.getContinents(this.getCountries)
-        if(!this.media.length & !this.state.loading) this.getMedia(this.getPrograms)
-        if(!this.galleries.length & !this.state.loading) this.getGalleries()
+        if(force || (!this.continents.length & !this.state.loading)) this.getContinents(this.getCountries)
+        if(force || (!this.media.length & !this.state.loading)) this.getMedia(this.getPrograms)
+        if(force || (!this.galleries.length & !this.state.loading)) this.getGalleries()
         updateBodyStyle('dashboard')
       break;
     }
   }
 
-  checkPage(){
+  checkPage(force=false){
     this.getUser(() => {
       let paths = getPaths()
       if(paths.includes('galleries')){
-        this.getPage('galleries')
+        this.getPage('galleries',force)
       } else if(paths.includes('continents')){
-        this.getPage('continents')
+        this.getPage('continents',force)
       } else if(paths.includes('programs')){
-        this.getPage('programs')
+        this.getPage('programs',force)
       } else if(paths.includes('settings')){
         //this.getSettings() Dev Note: not devved yet. Settings are in the json for now
-        this.getPage('settings')
+        this.getPage('settings',force)
       } else {
         if(paths.includes('countries')){
-          this.getPage('countries')
+          this.getPage('countries',force)
           if(paths.length > 3){
-            this.getPage('country')
+            this.getPage('country',force)
           }
         }else{
-          this.getPage('dashboard')
+          this.getPage('dashboard',force)
         }
       }
     })

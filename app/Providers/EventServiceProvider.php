@@ -25,11 +25,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ContinentsUpdated::class => [
+        ScreenAdded::class => [
             GetUpdatedContinents::class,
-        ],
-        CountriesUpdated::class => [
-            GetUpdatedCountries::class,
+            GetUpdatedCountries::class
         ]
     ];
 

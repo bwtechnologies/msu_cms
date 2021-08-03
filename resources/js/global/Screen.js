@@ -180,17 +180,21 @@ class Screen extends Component {
   }
 
   //Basic calls, requiring no login
-  getContinents() {
+  getContinents(give_feedback=true) {
     this.setState({loading:true})
     api.get('/cms/continents')
     .then(response => {
-      this.resetAlert()
+      if(give_feedback) {
+        this.resetAlert()
+        this.setState({
+          feedback: {
+            msg: 'Continents successfully loaded!',
+            style: 'success'
+          },
+        })
+      }
       this.setState({
         continents: response.data,
-        feedback: {
-          msg: 'Continents successfully loaded!',
-          style: 'success'
-        },
         has_server: true
       })
     })
@@ -205,20 +209,24 @@ class Screen extends Component {
   }
 
 
-  getCountries(){
+  getCountries(give_feedback=true){
     this.setState({loading:true})
     api.get('/cms/countries')
     .then(response => {
       this.countries = response.data
     })
     .finally(() => {
-      this.resetAlert()
+      if(give_feedback) {
+        this.resetAlert()
+        this.setState({
+          feedback: {
+            msg: 'Countries successfully loaded!',
+            style: 'success'
+          }
+        })
+      }
       this.setState({
-        countries: this.countries,
-        feedback: {
-          msg: 'Countries successfully loaded!',
-          style: 'success'
-        }
+        countries: this.countries
       })
     })
     .catch(error => {
@@ -387,12 +395,22 @@ class Screen extends Component {
     this.getUser()
     this.getGalleries(this.getMedia)
     this.getPrograms()
-    this.getCountries()
     this.getContinents()
+    this.getCountries()
 
     Echo.channel(`screens`)
     .listen('ScreenAdded', (e) => {
-      console.log('screen!!!',e)
+      if(this.state.user){
+        this.resetAlert();
+        this.setState({
+          feedback: {
+            msg: `A new follower screen called "${e.screens}" was added to the System`,
+            style: 'success'
+          }
+        })
+      }
+      this.getContinents(false)
+      this.getCountries(false)
     })
   }
 
