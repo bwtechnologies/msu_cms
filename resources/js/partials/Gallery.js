@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {message, Upload} from 'antd'
+import {Upload} from 'antd'
 import cms from '../cms.json'
 
 class Gallery extends Component {
@@ -20,7 +20,7 @@ class Gallery extends Component {
   }
 
   onChange({file, fileList}) {
-    console.log(file)
+//    console.log(file)
     if( this.state.is_valid ) {
       if (file.status === 'uploading') {
         this.setState({ loading: true })
@@ -117,7 +117,8 @@ class Gallery extends Component {
           beforeUpload: this.beforeUpload, 
           onPreview: this.props.previewModal, 
           onRemove: this.props.deleteMedia, 
-          fileList: this.state.fileList,
+          fileList: this.state.fileList, 
+          iconRender: false, 
           progress: {
             strokeColor: {
               '0%': 'var(--bs-warning)',

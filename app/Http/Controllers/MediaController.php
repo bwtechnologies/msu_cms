@@ -19,6 +19,9 @@ class MediaController extends Controller
     public function index()
     {
         $media = Media::all();
+        foreach ($media as $asset) {
+            if(!$asset->thumbUrl) $asset->thumbUrl = $asset->poster;
+        }
         return response()->json($media);
     }
 
