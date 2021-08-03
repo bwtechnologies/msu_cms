@@ -12,15 +12,14 @@ use Illuminate\Http\Request;
 class CountriesController extends Controller
 {
 
-    public function parse($countries)
+    public function parse($countries,$style)
     {
         foreach ($countries as $country) {
             $country->continent;
             $country->programs;
             $country->gallery;
             if($country->gallery) $country->gallery->media;
-
-            CountriesUpdated::dispatch($country);
+            if($country->enabled != 'off' && $country->suspended != 'on') CountriesUpdated::dispatch($country,$style);
         }
 
         return $countries;
@@ -35,7 +34,7 @@ class CountriesController extends Controller
     {
         $countries = Countries::all();
 
-        return response()->json($this->parse($countries));
+        return response()->json($this->parse($countries,'listing'));
     }
 
     /**
@@ -47,7 +46,7 @@ class CountriesController extends Controller
     {
         $countries = Countries::where('enabled','on')->get();
 
-        return response()->json($this->parse($countries));
+        return response()->json($this->parse($countries,'listing'));
     }
 
     /**
@@ -74,6 +73,7 @@ class CountriesController extends Controller
         ]);
 
         $country->save();
+        CountriesUpdated::dispatch($country,'create');
 
         return response()->json('Country successfully created!');
     }
@@ -100,7 +100,7 @@ class CountriesController extends Controller
         $country->suspended = $request->get('suspended');
 
         $country->save();
-        $country = $this->parse([$country]);
+        $country = $this->parse([$country],'update');
         return response()->json($country[0]);
     }
 

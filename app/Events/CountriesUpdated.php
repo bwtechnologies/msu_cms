@@ -23,9 +23,10 @@ class CountriesUpdated implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Countries $countries)
+    public function __construct(Countries $countries, String $style)
     {
         $this->countries = $countries;
+        $this->style     = $style;
     }
 
     /**
