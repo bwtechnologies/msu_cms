@@ -1,5 +1,6 @@
 import cms from '../cms.json'
 import {closeModal} from '../functions'
+import {injectProgram} from '../programs'
 import React, {Component} from 'react'
 import Button from '../components/Button'
 import Headline from '../components/Headline'
@@ -74,9 +75,10 @@ class Programs extends Component {
                 description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>
               }
             ],(obj) => {
-//              obj = this.props.parseProgram(obj)
               closeModal(this.props.resetModal)
-              this.props.postProgram(obj)
+              this.props.postProgram(obj, (program) => {
+                injectProgram(program, this)
+              })
             })
           }
         }}

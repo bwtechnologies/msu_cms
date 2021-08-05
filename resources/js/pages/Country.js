@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import cms from '../cms.json'
 import {Spin, Table, Tooltip} from 'antd'
-import {closeModal, randomID, updateBodyStyle} from '../functions'
+import {closeModal} from '../functions'
+import {injectProgram} from '../programs'
 import Button from '../components/Button'
 import Headline from '../components/Headline'
 import Subheadline from '../components/Subheadline'
@@ -31,14 +32,6 @@ class Country extends Component {
     if(this.props){
       this.props.setModal("preview",file.name,'', [], false, false, file.url ? file.url : file.thumbUrl)
     }
-  }
-
-  injectProgram(obj) {
-    obj.id = randomID()
-    obj = this.props.parseProgram(obj)
-    let nu = this.state.programs
-    nu.push(obj)
-    this.setState({programs: nu})
   }
 
   selectCountry(){
@@ -148,7 +141,7 @@ class Country extends Component {
                       description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>, 
                     }
                   ],(obj) => {
-                    this.injectProgram(obj)
+                    injectProgram(obj,this)
                     closeModal(this.props.resetModal)
                     this.props.postProgram(obj)
                     })
@@ -224,11 +217,8 @@ class Country extends Component {
                               }
                             ],(obj) => {
                               closeModal(this.props.resetModal)
-                              obj = this.props.parseProgram(obj)
-                              let cp = this.state.programs.filter(p => p.id !== obj.id)
-                              cp.push(obj)
+                              injectProgram(obj, this)
                               this.props.editProgram(obj)
-                              this.setState({programs: cp})
                               })
                             }
                           },{

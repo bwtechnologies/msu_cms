@@ -1,6 +1,7 @@
 import api from '../api.js'
 import cms from '../cms.json'
 import {getPaths, timedAlert, updateBodyStyle} from '../functions'
+import {parseProgram, injectProgram, updateProgram} from '../programs'
 import React, {Component} from "react"
 import {BrowserRouter, Route, Switch} from "react-router-dom"
 import Header from "../global/Header"
@@ -83,8 +84,6 @@ class Admin extends Component {
     this.deleteProgram    = this.deleteProgram.bind(this)
     this.deletePrograms   = this.deletePrograms.bind(this)
     this.editProgram      = this.editProgram.bind(this)
-    this.injectProgram    = this.injectProgram.bind(this)
-    this.parseProgram     = this.parseProgram.bind(this)
     this.postProgram      = this.postProgram.bind(this)
     this.getGalleries     = this.getGalleries.bind(this)
     this.setQR            = this.setQR.bind(this)
@@ -285,11 +284,11 @@ class Admin extends Component {
   }
 
   editProgram(program, callback=false){
-    program = this.parseProgram(program)
+    program = parseProgram(program)
     this.setState({loading: true})
     api.put(`/resource/programs/${program.id}`,program)
     .then( response => {
-      let np = this.injectProgram(response.data)
+      let np = updateProgram(response.data, this)
       this.resetAlert()
       this.setState({
         feedback: {
@@ -316,35 +315,22 @@ class Admin extends Component {
     })
   }
 
-  injectProgram(program) {
-    return this.state.programs.map(p => {
-      if(p.id !== program.id){
-        return p
-      }else{
-        return program
-      }
-    })
-  }
-
   postProgram(program, callback=false){
-    program = this.parseProgram(program)
+    program = parseProgram(program)
     this.setState({loading: true})
     api.post('/resource/programs', program)
     .then( response => {
       program = response.data
-      let np = this.state.programs.concat(program)
-      
+      injectProgram(program, this)
       this.resetAlert()
-      this.setState({
+      this.setState({ 
         feedback: {
           msg: `${program.name} successfully created!`,
           style: 'success'
-        },
-        programs: np, 
+        }, 
         loading: false,
         programs_have_posted: true
       })
-      this.programs = np
       if(callback) callback(program)
     })
     .catch( error => {
@@ -570,15 +556,6 @@ class Admin extends Component {
     country.gallery = JSON.parse(country.gallery)
     country.updated_at = new Date()
     return country
-  }
-
-  parseProgram(program) {
-    if(program.id) program.id = parseFloat(program.id)
-    program.countries = typeof program.country_ids != 'string' ? 
-                        JSON.stringify(program.country_ids) : 
-                        program.country_ids
-    delete program.country_ids
-    return program
   }
 
   editCountry(country, callback=false){
@@ -929,7 +906,6 @@ class Admin extends Component {
 
     let programMethods = {
       editProgram: this.editProgram, 
-      parseProgram: this.parseProgram, 
       deletePrograms: this.deletePrograms, 
       deleteProgram: this.deleteProgram, 
       postProgram: this.postProgram, 

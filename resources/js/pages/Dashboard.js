@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Table} from 'antd'
 import cms from '../cms.json'
-import {closeModal, randomID} from '../functions'
+import {closeModal, sortAlpha} from '../functions'
+import {injectProgram} from '../programs'
 import {toggleCountries} from '../world'
 import {checkPrograms} from '../programs'
 import Button from '../components/Button'
@@ -42,7 +43,7 @@ class Dashboard extends Component {
     this.parseCountries   = this.parseCountries.bind(this)
 
     this.selectCountry    = this.selectCountry.bind(this)
-    
+
     this.selectFilter     = this.selectFilter.bind(this)
     this.previewModal     = this.previewModal.bind(this)
   }
@@ -215,7 +216,9 @@ class Dashboard extends Component {
                   {
                     title: 'NAME',
                     dataIndex: 'name',
-                    key: 'name'
+                    key: 'name',
+                    defaultSortOrder: 'ascend',
+                    sorter: (a, b) => sortAlpha(a.name, b.name)
                   },{
                     title: 'Action',
                     dataIndex: 'Action',
@@ -416,7 +419,57 @@ class Dashboard extends Component {
             <>
             <Subheadline key="dashboard__headline--programs" 
             copy={this.state.country.name} h2Style="ms-0 mb-0 fw-bold text-primary display-6" 
-            hStyle="d-flex align-items-center w-100 py-3 px-4 mb-2 mx-auto bg-tertiary sticky sticky-top justify-content-start" has_selected={this.state.selectedPrograms.length > 0 ? 'program' : false} num_selected={this.state.selectedPrograms ? this.state.selectedPrograms.length : 0} />
+            add_new={{
+              slug: 'New',
+              callback: () => {
+                this.props.createModal(`New Program`, '',[
+                  {
+                    label: 'Name',
+                    id: 'name',
+                    type: 'text', 
+                    required: true, 
+                    style: 'col-12', 
+                    placeholder: 'Please choose a name for the Program'
+                  },{
+                    label: 'Semester',
+                    id: 'semester',
+                    type: 'text', 
+                    required: true, 
+                    style: 'mt-2 col-md-6', 
+                    placeholder: 'Spring, Summer, Winter etc.'
+                  },{
+                    label: 'Country/Countries',
+                    id: 'country_ids',
+                    type: 'select', 
+                    readOnly: true, 
+                    required: true, 
+                    multiple: true, 
+                    options: this.props.countries.map(co => {
+                      return { 
+                        label: co.name,
+                        value: co.id
+                      }
+                    }),
+                    style: 'mt-2 col-md-6',
+                    value: [this.state.country.id]
+                  },{
+                    label: 'Suspended/Open',
+                    id: 'suspended',
+                    type: 'checkbox', 
+                    style: 'mt-2 col-12', 
+                    description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>
+                  }
+                ],(obj) => {
+                  closeModal(this.props.resetModal)
+                  this.props.postProgram(obj, (projects) => {
+                    injectProgram(projects, this)
+                  })
+                })
+              }
+            }}
+            hStyle="d-flex align-items-center w-100 py-3 px-4 mb-2 mx-auto bg-tertiary sticky sticky-top justify-content-start" 
+            has_selected={this.state.selectedPrograms.length > 0 ? 'program' : false} 
+            num_selected={this.state.selectedPrograms ? this.state.selectedPrograms.length : 0} />
             <form className={this.divStyle+' mb-2'} onSubmit={(event)=>{
               event.preventDefault()
               let code = document.getElementById('code')
@@ -461,6 +514,8 @@ class Dashboard extends Component {
                   }, {
                     title: 'NAME',
                     dataIndex: 'name',
+                    defaultSortOrder: 'ascend',
+                    sorter: (a, b) => sortAlpha(a.name, b.name),
                     key: 'name'
                   },{
                     title: 'Action',
