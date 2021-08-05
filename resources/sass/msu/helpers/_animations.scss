@@ -14,9 +14,11 @@ a,
   transition: transform 500ms ease-out;
 }
 
-[data-country] path,
-[data-country] polygon {
-  transition: all 150ms ease-out;
+[data-country] {
+  path,
+  polygon, polyline {
+    transition: all 150ms ease-out;
+  }
 }
 
 //Animate every attribute at 'fast' speed w/hover at 'hyper' speed
