@@ -310,6 +310,11 @@ class MediaTableSeeder extends Seeder
             'thumbUrl'   => env('FIREBASE_URL_PREFIX', 'Laravel') . "business-law-ethics-and-sustainability-in-an-emerging-global-market-2__thumb.jpg" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
             'gallery_id' => 8
         ]);
+        DB::table('media')->insert([
+            'type'       => 2,
+            'url'        => env('FIREBASE_URL_PREFIX', 'Laravel') . "program_highlights--business_law_ethics_and_sustainability_in_an_emerging_global_market.mp4" . env('FIREBASE_URL_SUFFIX', 'Laravel'),
+            'gallery_id' => 8
+        ]);
         //India
         DB::table('media')->insert([
             'type'       => 1,
