@@ -344,7 +344,7 @@ class Admin extends Component {
     })
   }
 
-  deleteProgram(id){
+  deleteProgram(id, callback=false){
     this.setState({loading: true})
     api.delete(`/resource/programs/${id}`)
     .then( response => {
@@ -361,6 +361,8 @@ class Admin extends Component {
         programs_have_posted: true
       })
       this.programs = np
+
+      if(callback) callback(np)
     })
     .catch( error => {
       this.setState({

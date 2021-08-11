@@ -26,11 +26,13 @@ class Dashboard extends Component {
         label: cms.filters[0]
       },
       gallery: false, 
+      loading: false, 
       programs: false,
       selectedPrograms: []
     }
 
     this.countries        = []
+    this.programs         = false
 
     this.divCss           = { overflow:'hidden',overflowY:'auto' }
     this.divStyle         = "p-4 bg-tertiary h-100"
@@ -115,6 +117,7 @@ class Dashboard extends Component {
         programs: country.programs,
         gallery: country.gallery
       })
+      this.programs = country.programs
     }else{
       let state = {
         country: false,
@@ -460,9 +463,18 @@ class Dashboard extends Component {
                     description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>
                   }
                 ],(obj) => {
+                  this.setState({loading:true})
                   closeModal(this.props.resetModal)
-                  this.props.postProgram(obj, (projects) => {
-                    injectProgram(projects, this)
+                  this.props.postProgram(obj, (program) => {
+                    let nu = this.state.programs
+                    this.setState({programs:[]})
+                    nu.push(program)
+                    setTimeout(() => {
+                      this.setState({
+                        programs:nu, 
+                        loading:false
+                      })
+                    },300)
                   })
                 })
               }
@@ -489,8 +501,9 @@ class Dashboard extends Component {
                files={this.props.media.filter(media => media.gallery_id === this.state.gallery.id)}/>
             </div>
             }
+            { this.state.programs &&
             <div className="p-4 bg-list-item h-100">
-              <Table dataSource={this.state.programs}
+              <Table dataSource={this.state.programs} loading={this.state.loading}
                 rowKey={(record) => {
                   return `dashboard__table__row--${record.id}`
                 }} 
@@ -598,11 +611,20 @@ class Dashboard extends Component {
                             }
                           ],() => {
                             closeModal(this.props.resetModal)
-                            let np = this.state.programs.filter(p => p.id !== record.id)
-                            this.props.deleteProgram(record.id)
-                            this.setState({programs: np})
+                            this.props.deleteProgram(record.id, () => {
+                              let np = this.state.programs.filter(p => p.id !== record.id)
+                              let cou = this.state.country
+                              cou.programs = np
+                              let cous = this.state.countries.map(c => {
+                                if(c.id === this.state.country.id) {
+                                  return cou
+                                }else{
+                                  return c
+                                }
+                              })
+                              this.setState({programs: np, countries: cous})
                             })
-                          }
+                          }) }
                         }]}/>
                       )
                     }
@@ -610,6 +632,7 @@ class Dashboard extends Component {
                 ]}
                 pagination={false}/>
             </div>
+            }
             </>
             }
           </>
