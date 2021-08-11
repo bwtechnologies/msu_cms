@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'username' => 'maakuwadmin',
+            'username' => 'MaakuW',
             'first_name' => 'Mark',
             'last_name' => 'Williamson',
             'user_level_id' => 1, 
@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('m1Ch!9@N')
         ]);
         DB::table('users')->insert([
-            'username' => 'sscott',
+            'username' => 'Sarah Scott',
             'first_name' => 'Sarah',
             'last_name' => 'Scott',
             'user_level_id' => 2, 
@@ -34,16 +34,25 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('Sp@rty!'),
         ]);
         DB::table('users')->insert([
-            'username' => 'bseiber',
-            'first_name' => 'Ben',
-            'last_name' => 'Seiber',
+            'username' => 'Guanglong Pang',
+            'first_name' => 'Guanglong',
+            'last_name' => '',
             'user_level_id' => 2, 
-            'email' => 'bseiber@bluewatertech.com',
-            'photo' => '//via.placeholder.com/100x100',
-            'password' => bcrypt('B1u3W@t3R'),
+            'email' => 'pangguan@broad.msu.edu',
+            'photo' => env('APP_URL','laravel') . '/images/user__sparty.jpg',
+            'password' => bcrypt('Sp@rty!'),
         ]);
         DB::table('users')->insert([
-            'username' => 'pphelps',
+            'username' => 'Jim Wilson',
+            'first_name' => 'Jim',
+            'last_name' => '',
+            'user_level_id' => 2, 
+            'email' => 'wilson4@msu.edu',
+            'photo' => env('APP_URL','laravel') . '/images/user__sparty.jpg',
+            'password' => bcrypt('Sp@rty!'),
+        ]);
+        DB::table('users')->insert([
+            'username' => 'Paula Phelps',
             'first_name' => 'Paula',
             'last_name' => 'Phelps',
             'user_level_id' => 2, 
