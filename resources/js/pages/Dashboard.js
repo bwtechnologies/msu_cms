@@ -593,7 +593,16 @@ class Dashboard extends Component {
                                   return obj
                                 }
                               })
-                              this.setState({programs: np})
+                              let cou = this.state.country
+                              cou.programs = np
+                              let cous = this.state.countries.map(c => {
+                                if(c.id === this.state.country.id) {
+                                  return cou
+                                }else{
+                                  return c
+                                }
+                              })
+                              this.setState({programs: np, countries: cous, country: cou})
                               })
                             })
                           }
