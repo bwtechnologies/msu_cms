@@ -93,7 +93,7 @@
                 pointer-events: none;
                 cursor: help;
               }
-              &.suspended {
+              &.suspended, &:not(.programs) {
                 path, polygon, polyline {
                   fill: grayscale($secondary)
                 }
