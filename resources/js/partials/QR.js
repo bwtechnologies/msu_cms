@@ -7,9 +7,11 @@ class QR extends Component {
     super(props)
 
     this.state = ({
-      code: ''
+      code: '',
+      is_editing: false,
     })
 
+    this.code = ''
     this.title = cms.qrcode.title
     this.description = cms.qrcode.description
   }
@@ -19,14 +21,20 @@ class QR extends Component {
     if(this.props.description) this.description = this.props.description
     if(this.props.code) this.setState({code: this.props.code})
   }
+
+  componentDidUpdate(){
+    if(this.props.code != this.code) {
+      this.setState({code: this.props.code})
+      this.code = this.props.code
+    }
+  }
   
   render(){
-    let code = this.props.code ? this.props.code : ''
       return (
         <div className="d-flex align-items-center">
           <picture className="border border-primary bg-white p-2 me-4">
-          { code ?
-            <QRCode value={code} size={cms.qrcode.size}/>
+          { this.state.code ?
+            <QRCode value={this.state.code} size={cms.qrcode.size}/>
           :
             <svg width={cms.qrcode.size} height={cms.qrcode.size}/>
           }
