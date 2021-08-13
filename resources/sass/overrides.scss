@@ -349,8 +349,38 @@ h6, .h6 {
   font-size: $navigation-td-font-size;
   background-color: transparent;
   table {
-    /*width: 100%;*/
     border-collapse: collapse;
+  }
+  &.ant-table-empty {
+    .ant-table-thead {
+      display: none;
+    }
+    .ant-table-placeholder {
+      background-color: transparent;
+      color: $primary;
+      .ant-table-cell {
+        border: none;
+      }
+    }
+    .ant-empty-img-simple-ellipse {
+      fill: $primary;
+      opacity: 0.3;
+      filter: blur(1px);
+    }
+    .ant-empty-normal {
+      margin: 0;
+    }
+    .ant-empty-img-simple-g {
+      path {
+        stroke: $primary;
+      }
+      path:first-child {
+        fill: $seafoam;
+      }
+      .ant-empty-img-simple-path {
+        fill: #5c8a80;
+      }
+    }
   }
 }
 
