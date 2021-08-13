@@ -105,7 +105,7 @@ class Button extends Component {
       break;
       case 'modal':
         button = (
-          <button className={`btn btn-${this.props.bStyle ? this.props.bStyle : 'secondary btn-sm'}`} data-target="#main__modal_window" data-toggle="modal" onClick={this.props.callback}>
+          <button className={`btn btn-${this.props.bStyle ? this.props.bStyle : 'secondary btn-sm'}`} data-bs-target="#main__modal_window" data-bs-toggle="modal" onClick={this.props.callback}>
             { this.props.icon &&
               <svg className="icon">
                 <use xlinkHref={`#icon__${this.props.icon}`}/>
