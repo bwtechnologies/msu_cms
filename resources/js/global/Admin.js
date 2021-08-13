@@ -375,7 +375,7 @@ class Admin extends Component {
     })
   }
 
-  deletePrograms(programs){
+  deletePrograms(programs, callback=false){
     let np = this.state.programs
     this.setState({loading: true})
     programs.forEach( pr => {
@@ -391,6 +391,7 @@ class Admin extends Component {
           programs_have_posted: true
         })
         this.programs = np
+        if(callback) callback()
       })
       .catch( error => {
         this.setState({

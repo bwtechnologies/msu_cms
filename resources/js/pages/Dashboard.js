@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {Table} from 'antd'
 import cms from '../cms.json'
 import {closeModal, sortAlpha} from '../functions'
-import {injectProgram} from '../programs'
 import {toggleCountries} from '../world'
 import {checkPrograms} from '../programs'
 import Button from '../components/Button'
@@ -168,6 +167,19 @@ class Dashboard extends Component {
     let levels = []
     if(this.state.continent) levels.push(this.state.continent)
     if(this.state.country) levels.push(this.state.country)
+    let programAtts = ( this.props.user_type === 1 && this.state.programs.length > 1 ) &&
+    {
+      rowSelection: {
+        onChange: rows => {
+          this.setState({ selectedPrograms: rows })
+        }
+      },
+      rowClassName: (record) => {
+        let style = "ant-table-clickable"+ (record.suspended !== 'off' ? ' suspended' : ' active')
+        return style
+      }
+    }
+
     return (
       <article key="dashboard__wrapper" className="container mx-0 px-2 pb-2">
         <div className="row mx-0 align-items-stretch justify-content-stretch h-100">
@@ -422,72 +434,13 @@ class Dashboard extends Component {
             <>
             <Subheadline key="dashboard__headline--programs" 
             copy={this.state.country.name} h2Style="ms-0 mb-0 fw-bold text-primary display-6" 
-            add_new={{
-              slug: 'New',
-              callback: () => {
-                this.props.createModal(`New Program`, '',[
-                  {
-                    label: 'Name',
-                    id: 'name',
-                    type: 'text', 
-                    required: true, 
-                    style: 'col-12', 
-                    placeholder: 'Please choose a name for the Program'
-                  },{
-                    label: 'Semester',
-                    id: 'semester',
-                    type: 'text', 
-                    required: true, 
-                    style: 'mt-2 col-md-6', 
-                    placeholder: 'Spring, Summer, Winter etc.'
-                  },{
-                    label: 'Country/Countries',
-                    id: 'country_ids',
-                    type: 'select', 
-                    readOnly: true, 
-                    required: true, 
-                    multiple: true, 
-                    options: this.props.countries.map(co => {
-                      return { 
-                        label: co.name,
-                        value: co.id
-                      }
-                    }),
-                    style: 'mt-2 col-md-6',
-                    value: [this.state.country.id]
-                  },{
-                    label: 'Suspended/Open',
-                    id: 'suspended',
-                    type: 'checkbox', 
-                    style: 'mt-2 col-12', 
-                    description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>
-                  }
-                ],(obj) => {
-                  this.setState({loading:true})
-                  closeModal(this.props.resetModal)
-                  this.props.postProgram(obj, (program) => {
-                    let nu = this.state.programs
-                    this.setState({programs:[]})
-                    nu.push(program)
-                    setTimeout(() => {
-                      this.setState({
-                        programs:nu, 
-                        loading:false
-                      })
-                    },300)
-                  })
-                })
-              }
-            }}
-            hStyle="d-flex align-items-center w-100 py-3 px-4 mb-2 mx-auto bg-tertiary sticky sticky-top justify-content-start" 
-            has_selected={this.state.selectedPrograms.length > 0 ? 'program' : false} 
-            num_selected={this.state.selectedPrograms ? this.state.selectedPrograms.length : 0} />
+            hStyle="align-items-center w-100 py-3 px-4 mx-auto bg-tertiary sticky sticky-top justify-content-start border-bottom border-5 border-white"/>
             <form className={this.divStyle+' mb-2'} onSubmit={(event)=>{
               event.preventDefault()
               let code = document.getElementById('code')
               if(code) this.props.setQR(code.value, this.state.country)
             }}>
-              <QRCode code={this.state.country.code}/>
+              <QRCode code={this.state.country.code != '' ? this.state.country.code : ''} label={cms.gallery.label}/>
             </form>
             { ( this.state.gallery && this.props.media ) &&
             <div className={this.divStyle+' mb-2'}>
@@ -502,20 +455,109 @@ class Dashboard extends Component {
             </div>
             }
             { this.state.programs &&
-            <div className="p-4 bg-list-item h-100">
+            <div className="p-4 bg-tertiary h-100">
+              <header>
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <h3 className="small text-uppercase fw-bold text-secondary small my-0 align-content-center">{cms.programs.label}</h3>
+                  <nav className="d-flex justify-content-between align-content-center">
+                    { this.state.selectedPrograms.length > 0 &&
+                    <button className="btn btn-sm btn-danger ms-4 d-flex text-uppercase align-items-center me-2" onClick={() => {
+                      this.setState({loading:true})
+                      let programs = this.state.selectedPrograms.map(pr => {
+                        let p = pr.substring(pr.search('--') + 2)
+                        return this.state.programs.filter(c => c.id === parseInt(p))[0]
+                      })
+                      this.props.deletePrograms(programs, () => {
+                        let np = this.state.programs.filter(p => {
+                          return !programs.some(pp => { 
+                            return pp.id === p.id
+                          })
+                        })
+                        let cou = this.state.country
+                        cou.programs = np
+                        let cous = this.state.countries.map(c => {
+                          if(c.id === this.state.country.id) {
+                            return cou
+                          }else{
+                            return c
+                          }
+                        })
+                        this.setState({
+                          programs:np, 
+                          countries:cous, 
+                          country:cou,
+                          selectedPrograms: [],
+                          loading: false
+                        })
+                      })
+                    }}>
+                      <span className="me-2">DELETE</span>
+                      <span className="badge rounded-pill bg-white p-1 text-primary fw-bold" style={{minWidth:'1.25rem'}}>{this.state.selectedPrograms.length}</span>
+                    </button>
+                    }
+                    <Button type="modal" icon={false} label="NEW" bStyle="btn btn-smoke text-uppercase btn-sm"
+                     callback={() => {
+                        this.props.createModal(`New Program`, '',[
+                          {
+                            label: 'Name',
+                            id: 'name',
+                            type: 'text', 
+                            required: true, 
+                            style: 'col-12', 
+                            placeholder: 'Please choose a name for the Program'
+                          },{
+                            label: 'Semester',
+                            id: 'semester',
+                            type: 'text', 
+                            required: true, 
+                            style: 'mt-2 col-md-6', 
+                            placeholder: 'Spring, Summer, Winter etc.'
+                          },{
+                            label: 'Country/Countries',
+                            id: 'country_ids',
+                            type: 'select', 
+                            readOnly: true, 
+                            required: true, 
+                            multiple: true, 
+                            options: this.props.countries.map(co => {
+                              return { 
+                                label: co.name,
+                                value: co.id
+                              }
+                            }),
+                            style: 'mt-2 col-md-6',
+                            value: [this.state.country.id]
+                          },{
+                            label: 'Suspended/Open',
+                            id: 'suspended',
+                            type: 'checkbox', 
+                            style: 'mt-2 col-12', 
+                            description: <span>This program is <span className="checked">suspended</span><span className="unchecked">open</span></span>
+                          }
+                        ],(obj) => {
+                          this.setState({loading:true})
+                          console.log('closer!')
+                          closeModal(this.props.resetModal)
+                          this.props.postProgram(obj, (program) => {
+                            let nu = this.state.programs
+                            this.setState({programs:[]})
+                            nu.push(program)
+                            setTimeout(() => {
+                              this.setState({
+                                programs:nu, 
+                                loading:false
+                              })
+                            },300)
+                          })
+                        })
+                     }}/>
+                  </nav>
+                </div>
+              </header>
               <Table dataSource={this.state.programs} loading={this.state.loading}
                 rowKey={(record) => {
                   return `dashboard__table__row--${record.id}`
-                }} 
-                rowSelection={{
-                  onChange: rows => {
-                    this.setState({ selectedPrograms: rows })
-                  }
-                }}
-                rowClassName={(record) => {
-                  let style = "ant-table-clickable"+ (record.suspended !== 'off' ? ' suspended' : ' active')
-                  return style
-                }}
+                }} {...programAtts}
                 columns={[
                   {
                     title: 'Semester',
